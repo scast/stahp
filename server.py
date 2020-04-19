@@ -30,7 +30,7 @@ class Player:
                 if data["type"] == "name":
                     logger.info("setting username to %s", data["value"])
                     self.name = data["value"]
-                    await self.stahp.broadcast_name(self)
+                    await self.stahp.broadcast_name()
 
                 if data["type"] == "start_round":
                     if not self.stahp.on_going_round:
@@ -64,16 +64,14 @@ class Stahp:
             ws, self, self.player_count
         )
         self.player_count += 1
-        await player.send_json(
-            {
-                "type": "players",
-                "value": [(p.name or p.count) for p in self.players.values()],
-            }
-        )
+        await self.broadcast_name()
         await player.command()
 
-    async def broadcast_name(self, player):
-        data = [(p.name or p.count) for p in self.players.values()]
+    async def broadcast_name(self):
+        data = [
+            {"name": (p.name or p.count), "score": self.scores[p.count]}
+            for p in self.players.values()
+        ]
         for p in self.players.values():
             await p.send_json(
                 {"type": "players", "value": data,}
@@ -107,6 +105,9 @@ class Stahp:
         for r in self.round_results.values():
             for col, value in r.items():
                 value = value.strip().lower()
+                if not value:
+                    continue
+
                 if value[0].lower() == self.letter.lower():
                     if value in ans[col]:
                         ans[col][value] = 50
@@ -119,6 +120,10 @@ class Stahp:
             score = 0
             if result is not None:
                 for col, value in result.items():
+                    value = value.strip().lower()
+                    if not value:
+                        continue
+
                     if value in ans[col]:
                         score += ans[col][value]
 
@@ -139,13 +144,7 @@ class Stahp:
         for p in self.players:
             self.scores[p] += scores[p]
 
-        data = [
-            {"name": player.name or p.count, "score": self.scores[p],}
-            for p, player in self.players.items()
-        ]
-
-        for p in self.players.values():
-            await p.send_json({"type": "scores", "value": data})
+        await self.broadcast_name()
 
 
 async def websocket_handler(request):

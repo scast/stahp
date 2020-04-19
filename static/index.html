@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>S T A H P!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  </head>
+  <body>
+
+
+    <section class="section">
+      <div class="container" id="app">
+        <h1 class="title">
+          STAHP
+        </h1>
+
+        <div class="is-flex" id="name">
+          <input class="input" type="text" placeholder="What's your name?" name="name" v-model="name">
+        </div>
+        <div class="columns">
+          <div class="column is-three-quarters">
+            <div class="is-flex">
+              <h3 class="title is-4">Game</h3>
+              <a class="button is-link" id="set-name" v-on:click="startRound">
+                New Round
+              </a>
+            </div>
+            <table class="table is-fullwidth">
+              <thead>
+                <tr>
+                  <th>Letter</th>
+                  <th>Name</th>
+                  <th>Surname/Last name</th>
+                  <th>Country/City</th>
+                  <th>Food</th>
+                  <th>Animal</th>
+                  <th>Movie/TV Show</th>
+                  <th>Object</th>
+                  <th>STAHP</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="round in rounds">
+                  <th>{{ round.letter }}</th>
+                  <td>
+                    <input :disabled="round.finished" v-model="round.player.name" class="input" type="text" placeholder="Name" name="round-name">
+                  </td>
+                  <td>
+                    <input :disabled="round.finished" v-model="round.player.surname" class="input" type="text" placeholder="Surname/Last name">
+                  </td>
+
+                  <td><input :disabled="round.finished" v-model="round.player.country" class="input" type="text" placeholder="Country/City"></td>
+                  <td><input :disabled="round.finished" v-model="round.player.food" class="input" type="text" placeholder="Food"></td>
+                  <td><input :disabled="round.finished" v-model="round.player.animal" class="input" type="text" placeholder="Animal"></td>
+                  <td><input :disabled="round.finished" v-model="round.player.movie" class="input" type="text" placeholder="Movie/TV Show"></td>
+                  <td><input :disabled="round.finished" v-model="round.player.object" class="input" type="text" placeholder="Object"></td>
+                  <td><a class="button is-danger" v-on:click="stahpRound">STAHP</a></td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+          <div class="column">
+            <h3 class="title is-4">Scores</h3>
+            <table class="table is-fullwidth">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="player in players">
+                  <th>{{ player.name }}</th>
+                  <td>
+                    {{ player.score }}
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
