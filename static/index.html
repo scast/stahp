@@ -59,6 +59,33 @@
                   <td><input :disabled="round.finished" v-model="round.player.object" class="input" type="text" placeholder="Object"></td>
                   <td><a class="button is-danger" v-on:click="stahpRound">STAHP</a></td>
                 </tr>
+                <tr v-for="round in previous_round">
+                  <th>{{ round.name }}</th>
+                  <td>
+                    {{ round.answers.name }}
+                  </td>
+                  <td>
+                    {{ round.answers.surname }}
+                  </td>
+                  <td>
+                    {{ round.answers.country }}
+                  </td>
+                  <td>
+                    {{ round.answers.food }}
+
+                  </td>
+                  <td>
+                    {{ round.answers.animal }}
+                  </td>
+                  <td>
+                    {{ round.answers.movie }}
+                  </td>
+                  <td>
+                    {{ round.answers.object }}
+                  </td>
+                  <td>{{ round.score }}</td>
+                </tr>
+
               </tbody>
             </table>
 

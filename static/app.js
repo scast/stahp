@@ -3,7 +3,8 @@ var app = new Vue({
   data: {
     players: [],
     name: '',
-    rounds: []
+    rounds: [],
+    previous_round: []
   },
   methods: {
     startRound: function() {
@@ -51,8 +52,8 @@ ws.addEventListener('message', function (event) {
         movie: '',
         object: '',
       }
-
     });
+    app.previous_round = [];
   }
 
   if (data.type === "finish_round") {
@@ -61,6 +62,10 @@ ws.addEventListener('message', function (event) {
       round.finished = true;
       ws.send(JSON.stringify({"type": "end_round", value: round.player}));
     }
+  }
+
+  if (data.type === "round_score") {
+    app.previous_round = data.value;
   }
 
 });
