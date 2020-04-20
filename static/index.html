@@ -28,67 +28,54 @@
                 New Round
               </a>
             </div>
-            <table class="table is-fullwidth">
+            <table class="table is-fullwidth is-narrow is-hoverable is-striped">
               <thead>
                 <tr>
                   <th>Letter</th>
-                  <th>Name</th>
-                  <th>Surname/Last name</th>
-                  <th>Country/City</th>
-                  <th>Food</th>
-                  <th>Animal</th>
-                  <th>Movie/TV Show</th>
-                  <th>Object</th>
+                  <th v-for="field in fields">
+                    {{field.display}}
+                  </th>
                   <th>STAHP</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="round in rounds">
+                <tr v-for="round in rounds" v-if="round.finished">
                   <th>{{ round.letter }}</th>
-                  <td>
-                    <input :disabled="round.finished" v-model="round.player.name" class="input" type="text" placeholder="Name" name="round-name">
-                  </td>
-                  <td>
-                    <input :disabled="round.finished" v-model="round.player.surname" class="input" type="text" placeholder="Surname/Last name">
-                  </td>
-
-                  <td><input :disabled="round.finished" v-model="round.player.country" class="input" type="text" placeholder="Country/City"></td>
-                  <td><input :disabled="round.finished" v-model="round.player.food" class="input" type="text" placeholder="Food"></td>
-                  <td><input :disabled="round.finished" v-model="round.player.animal" class="input" type="text" placeholder="Animal"></td>
-                  <td><input :disabled="round.finished" v-model="round.player.movie" class="input" type="text" placeholder="Movie/TV Show"></td>
-                  <td><input :disabled="round.finished" v-model="round.player.object" class="input" type="text" placeholder="Object"></td>
-                  <td><a class="button is-danger" v-on:click="stahpRound">STAHP</a></td>
-                </tr>
-                <tr v-for="round in previous_round">
-                  <th>{{ round.name }}</th>
-                  <td>
-                    {{ round.answers.name }}
-                  </td>
-                  <td>
-                    {{ round.answers.surname }}
-                  </td>
-                  <td>
-                    {{ round.answers.country }}
-                  </td>
-                  <td>
-                    {{ round.answers.food }}
-
-                  </td>
-                  <td>
-                    {{ round.answers.animal }}
-                  </td>
-                  <td>
-                    {{ round.answers.movie }}
-                  </td>
-                  <td>
-                    {{ round.answers.object }}
+                  <td v-for="field in fields">
+                    {{ round.player[field.id] }}
                   </td>
                   <td>{{ round.score }}</td>
                 </tr>
-
+                <tr v-if="previous_round.length > 0" >
+                  <th :colspan="fields.length + 2" style="background-color: #3273dc; color: white">Results</th>
+                </tr>
+                <tr v-for="round in previous_round">
+                  <th>{{ round.name }}</th>
+                  <td v-for="field in fields">
+                    {{ round.answers[field.id] }}
+                  </td>
+                  <td>{{ round.score }}</td>
+                </tr>
               </tbody>
             </table>
 
+            <form @submit.prevent="stahpRound">
+              <template v-for="round in rounds" v-if="!round.finished">
+                <h2>Letter: {{ round.letter }}<h2>
+
+                <div v-for="field in fields" class="field">
+                  <label class="label">{{ field.display }}</label>
+                  <div class="control">
+                    <input class="input" type="text" :placeholder="field.display" v-model="round.player[field.id]">
+                  </div>
+                </div>
+
+                <div class="control">
+                  <button class="button is-primary" type="submit">STAHP</button>
+                </div>
+
+              </template>
+            </form>
           </div>
 
           <div class="column">
@@ -106,11 +93,9 @@
                   <td>
                     {{ player.score }}
                   </td>
-
                 </tr>
               </tbody>
             </table>
-
           </div>
         </div>
 
