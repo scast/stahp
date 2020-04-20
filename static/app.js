@@ -4,7 +4,19 @@ var app = new Vue({
     players: [],
     name: '',
     rounds: [],
-    previous_round: []
+    previous_round: [],
+    fields: [
+      { id: "name", display: "Name" },
+      { id: "surname", display: "Surname/Last name" },
+      { id: "country", display: "Country/City" },
+      { id: "food", display: "Food" },
+      { id: "animal", display: "Animal" },
+      { id: "movie", display: "Movie/TV Show" },
+      { id: "song", display: "Song" },
+      { id: "brand", display: "Brand" },
+      { id: "company", display: "Company" },
+      { id: "object", display: "Object" },
+    ]
   },
   methods: {
     startRound: function() {
@@ -19,7 +31,7 @@ var app = new Vue({
 });
 
 
-const ws = new WebSocket("wss://stahp-backend.onrender.com/ws");
+const ws = new WebSocket("ws://localhost:9999/ws");
 
 
 // Connection opened
@@ -50,6 +62,7 @@ ws.addEventListener('message', function (event) {
         food: '',
         animal: '',
         movie: '',
+
         object: '',
       }
     });
