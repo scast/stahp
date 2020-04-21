@@ -13,8 +13,8 @@ var app = new Vue({
       { id: "animal", display: "Animal" },
       { id: "movie", display: "Movie/TV Show" },
       { id: "song", display: "Song" },
-      { id: "brand", display: "Brand" },
-      { id: "company", display: "Company" },
+      { id: "celebrity", display: "Celebrity" },
+      { id: "company", display: "Company/Brand" },
       { id: "object", display: "Object" },
     ]
   },
