@@ -1,2 +1,5 @@
 #name { margin-bottom: 20px; }
 #set-name { margin-left: 15px; }
+.points {position: relative}
+.points div { position: absolute; top: -1em; right: -1.25em; font-size: 50%;}
+.jtable tr { white-space: nowrap }
