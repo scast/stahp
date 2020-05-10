@@ -83,6 +83,7 @@ var app = new Vue({
 });
 
 
+const ws = new WebSocket("wss://stahp-backend.onrender.com/ws");
 
 
 // Connection opened
