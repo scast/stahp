@@ -29,7 +29,7 @@ class Player:
                     logger.exception(exc)
                     continue
 
-                print(f"received {data}")
+                #print(f"received {data}")
 
                 if data["type"] == "name":
                     logger.info("setting username to %s", data["value"])
@@ -56,7 +56,7 @@ class Player:
                     elif self.stahp.state == SCORING:
                         await self.stahp.finish_round(self, data["value"])
 
-        print(f"removing player {self.count}")
+        #print(f"removing player {self.count}")
         self.stahp.players.pop(self.count)
         await self.stahp.broadcast_names()
 
@@ -68,7 +68,7 @@ class Player:
         })
 
     async def send_json(self, data):
-        print("sending", data)
+        #print("sending", data)
         await self.ws.send_str(json.dumps(data))
 
     async def send_message(self, type_, value=None):
@@ -99,7 +99,7 @@ class Stahp:
         player = self.players[self.player_count] = Player(
             ws, self, self.player_count
         )
-        print(f"players: {self.players}")
+        #print(f"players: {self.players}")
         self.player_count += 1
         await player.welcome()
         await self.broadcast_names()
@@ -119,7 +119,7 @@ class Stahp:
         assert self.state == REVIEWING
         self.state = PLAYING
 
-        print(f"New round without {self.used}")
+        # print(f"New round without {self.used}")
         letter = random.choice(list(set(string.ascii_uppercase) - self.used))
         self.used.add(letter)
         self.round_results = {}
@@ -146,7 +146,7 @@ class Stahp:
                     "field": field
                 })
 
-        print(f"CHALLENGE {word} {field}")
+        # print(f"CHALLENGE {word} {field}")
 
     async def vote(self, player, value):
         assert self.state == VOTING
@@ -154,7 +154,7 @@ class Stahp:
         await self.maybe_count_votes()
 
     async def maybe_count_votes(self):
-        print(f"results={self.votes} challenger={self.challenger} players={self.players.keys()}")
+        # print(f"results={self.votes} challenger={self.challenger} players={self.players.keys()}")
         remaining_votes = list( set(self.players.keys()) - set(self.votes.keys()) )
         if remaining_votes == [self.challenger]:
             tally = Counter(self.votes.values())
