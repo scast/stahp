@@ -1,4 +1,5 @@
-const ws = new WebSocket( "ws://localhost:8000/ws");
+//const ws = new WebSocket("ws://localhost:8000/ws");
+const ws = new WebSocket("wss://stahp-backend.onrender.com/ws");
 
 function sendMessage(type, value = null) {
   let obj = {type, value};
@@ -81,9 +82,6 @@ var app = new Vue({
   },
 
 });
-
-
-const ws = new WebSocket("wss://stahp-backend.onrender.com/ws");
 
 
 // Connection opened

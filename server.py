@@ -126,6 +126,7 @@ class Stahp:
         self.on_going_round = True
         self.letter = letter
         self.challenged_words = defaultdict(list)
+        self.last_score = {}
         for p in self.players.values():
             await p.send_message("new_round", letter)
 
@@ -160,7 +161,7 @@ class Stahp:
             if tally[False] > tally[True]:
                 self.challenged_words[self.challenge_field].append(self.challenge_word)
                 await self.end_vote(True)
-                await self.score_round()
+                await self.score_round(True)
                 await self.broadcast_names()
             else:
                 await self.end_vote(False)
@@ -197,6 +198,11 @@ class Stahp:
     async def score_round(self, recount=False):
         def clean_value(s):
             return unidecode.unidecode(s.strip().lower())
+
+        if recount:
+            for p in self.players:
+                self.scores[p] -= self.last_score[p]
+
 
         ans = defaultdict(dict)
         for r in self.round_results.values():
@@ -244,6 +250,7 @@ class Stahp:
 
         # TODO: Fix total score after challenge
         for p in self.players:
+            self.last_score[p] = scores[p]
             self.scores[p] += scores[p]
 
         await self.broadcast_names()
