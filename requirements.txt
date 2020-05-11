@@ -1,1 +1,3 @@
 aiohttp==3.6.2
+petname==2.6
+Unidecode==1.1.1

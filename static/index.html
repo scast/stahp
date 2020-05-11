@@ -17,6 +17,25 @@
           STAHP
         </h1>
 
+        <div class="modal is-active" v-if="state == 'VOTING'">
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Challenge</p>
+              <button class="delete" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+              <p><strong>{{challenge.from}}</strong> is challenging word <strong>{{challenge.word}}</strong> for field <strong>{{challenge.field}}</strong></p>
+                <br>
+              <p>Do you accept this as a valid word?</p>
+            </section>
+            <footer class="modal-card-foot">
+              <button class="button is-success" v-on:click="doVote(true)">Yes, valid!</button>
+              <button class="button is-danger" v-on:click="doVote(false)">No way</button>
+            </footer>
+          </div>
+        </div>
+
         <div class="is-flex" id="name">
           <input class="input" type="text" placeholder="What's your name?" name="name" v-model="name">
         </div>
@@ -24,55 +43,61 @@
           <div class="column is-three-quarters">
             <div class="is-flex">
               <h3 class="title is-4">Game</h3>
-              <a class="button is-link" id="set-name" v-on:click="startRound">
+              <a class="button is-link" id="set-name" v-on:click="startRound" v-if="state == 'REVIEWING'">
                 New Round
               </a>
+              <p v-if="state == 'WAITING_VOTE'">Vote in progress</p>
             </div>
-            <table class="table is-fullwidth is-narrow is-hoverable is-striped">
-              <thead>
-                <tr>
-                  <th>Letter</th>
-                  <th v-for="field in fields">
-                    {{field.display}}
-                  </th>
-                  <th>STAHP</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="round in rounds" v-if="round.finished">
-                  <th>{{ round.letter }}</th>
-                  <td v-for="field in fields">
-                    {{ round.player[field.id] }}
-                  </td>
-                  <td>{{ round.score }}</td>
-                </tr>
-                <tr v-if="previous_round.length > 0" >
-                  <th :colspan="fields.length + 2" style="background-color: #3273dc; color: white">Results</th>
-                </tr>
-                <tr v-for="round in previous_round">
-                  <th>{{ round.name }}</th>
-                  <td v-for="field in fields">
-                    {{ round.answers[field.id] }}
-                  </td>
-                  <td>{{ round.score }}</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="table-container jtable">
+              <table class="table is-fullwidth is-bordered is-hoverable is-striped">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th v-for="field in fields">
+                      {{field.display}}
+                    </th>
+                    <th>STAHP</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="round in rounds" v-if="round.finished">
+                    <th>{{ round.letter }}</th>
+                    <td v-for="field in fields">
+                      {{ round.player[field.id] }}
+                    </td>
+                    <td>{{ round.score }}</td>
+                  </tr>
+                  <tr v-if="previous_round.length > 0" >
+                    <th :colspan="fields.length + 2" style="background-color: #3273dc; color: white">Results</th>
+                  </tr>
+                  <tr v-for="round in previous_round">
+                    <th>{{ round.name }}</th>
+                    <td v-for="field in fields" v-on:click="doChallenge(round.answers[field.id][0], field.id, round.answers[field.id][1])">
+                      <div class="points">
+                        <div>{{ round.answers[field.id][1] }}</div>
+                        {{ round.answers[field.id][0] }}
+                      </div>
+                    </td>
+                    <td>{{ round.score }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
             <form @submit.prevent="stahpRound">
               <template v-for="round in rounds" v-if="!round.finished">
                 <h2>Letter: {{ round.letter }}<h2>
 
-                <div v-for="field in fields" class="field">
-                  <label class="label">{{ field.display }}</label>
-                  <div class="control">
-                    <input class="input" type="text" :placeholder="field.display" v-model="round.player[field.id]">
+                  <div v-for="field in fields" class="field">
+                    <label class="label">{{ field.display }}</label>
+                    <div class="control">
+                      <input class="input" type="text" :placeholder="field.display" v-model="round.player[field.id]">
+                    </div>
                   </div>
-                </div>
 
-                <div class="control">
-                  <button class="button is-primary" type="submit">STAHP</button>
-                </div>
+                  <div class="control">
+                    <button class="button is-primary" type="submit">STAHP</button>
+                  </div>
 
               </template>
             </form>
@@ -101,7 +126,7 @@
 
       </div>
     </section>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/combine/npm/lodash@4,npm/vue@2"></script>
     <script src="app.js"></script>
   </body>
 </html>
